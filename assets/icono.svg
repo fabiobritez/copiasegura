@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Escudo con barra de redacción: el logo dibuja lo que la herramienta hace -->
+  <path d="M32 3 7 13v19c0 16 10.5 25.5 25 29 14.5-3.5 25-13 25-29V13Z" fill="#1d4ed8"/>
+  <path d="M32 3 7 13v19c0 16 10.5 25.5 25 29Z" fill="#3b82f6" opacity=".55"/>
+  <rect x="17" y="27" width="30" height="9" rx="2.5" fill="#0f172a"/>
+  <rect x="17" y="41" width="19" height="5" rx="2.5" fill="#ffffff" opacity=".9"/>
+  <rect x="40" y="41" width="7" height="5" rx="2.5" fill="#ffffff" opacity=".5"/>
+</svg>

@@ -1,0 +1,17 @@
+{
+  "name": "Copia Segura, protección de documentos",
+  "short_name": "Copia Segura",
+  "description": "Ocultá los datos sensibles de tu documento y agregale una marca de agua rastreable. Todo en tu navegador.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f4f7fb",
+  "theme_color": "#1d4ed8",
+  "icons": [
+    {
+      "src": "assets/icono.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

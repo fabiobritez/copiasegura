@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="es" class="reading">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cómo funciona · Copia Segura</title>
+    <meta name="description" content="Por qué ocultar datos de un documento de identidad importa, por qué desenfocar no alcanza, y cómo Copia Segura destruye la información en lugar de disimularla.">
+    <link rel="icon" type="image/svg+xml" href="assets/icono.svg">
+    <meta name="theme-color" content="#f4f7fb">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/document.css">
+    <script src="js/theme.js"></script>
+</head>
+<body>
+    <a class="skip-link" href="#content">Saltar al contenido</a>
+
+    <header class="header">
+        <button type="button" id="btnTheme" class="theme-toggle" aria-label="Cambiar a modo oscuro">
+            <svg class="to-dark" viewBox="0 0 24 24" aria-hidden="true" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 13a8 8 0 1 1-9-9 6.5 6.5 0 0 0 9 9Z"/>
+            </svg>
+            <svg class="to-light" viewBox="0 0 24 24" aria-hidden="true" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="4"/>
+                <path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+            </svg>
+        </button>
+    </header>
+
+    <main class="doc" id="content">
+        <a class="back-to-app" href="index.html">
+            <span aria-hidden="true">&larr;</span> Volver a la herramienta
+        </a>
+
+        <div class="doc-cover">
+            <p class="category">Documentación técnica</p>
+            <h1>Ocultar no es lo mismo que destruir</h1>
+            <p class="lede">
+                Por qué una foto de tu documento vale más de lo que parece, por qué el desenfoque
+                y el pixelado no la protegen, y qué hace Copia Segura en su lugar.
+            </p>
+        </div>
+
+        <nav class="toc" aria-labelledby="idx">
+            <h2 id="idx">Contenido</h2>
+            <ol>
+                <li><a href="#riesgo">El riesgo concreto</a></li>
+                <li><a href="#codigo">Lo que realmente contiene un DNI</a></li>
+                <li><a href="#reversible">Por qué desenfocar no alcanza</a></li>
+                <li><a href="#demostracion">Demostración: recuperar texto pixelado</a></li>
+                <li><a href="#destruir">Qué significa destruir la información</a></li>
+                <li><a href="#fugas">Las fugas que no están en los píxeles</a></li>
+                <li><a href="#pipeline">Qué hace la herramienta, paso a paso</a></li>
+                <li><a href="#marca">La marca de agua y el código de copia</a></li>
+                <li><a href="#verificar">Cómo verificar que nada se sube</a></li>
+                <li><a href="#limites">Lo que esta herramienta no puede hacer</a></li>
+                <li><a href="#fuentes">Fuentes</a></li>
+            </ol>
+        </nav>
+
+        <!-- ============================================================ -->
+        <section class="section" id="riesgo">
+            <h2><span class="number">Sección 01</span>El riesgo concreto</h2>
+
+            <p>
+                Mandar una foto del documento se volvió un trámite cotidiano: una inmobiliaria, un
+                banco, una plataforma de compraventa, un empleador. La mayoría de las veces no pasa
+                nada. El problema es lo que ocurre cuando esa imagen termina en las manos
+                equivocadas.
+            </p>
+
+            <p>
+                La Unidad Fiscal Especializada en Ciberdelincuencia del Ministerio Público Fiscal
+                documentó una modalidad concreta: los estafadores piden fotos del documento y dos
+                selfies con el pretexto de liberar una encomienda. Con ese material superan los
+                procesos de validación de identidad que usan las empresas fintech para abrir
+                cuentas.<a href="#f1" class="ref">[1]</a>
+            </p>
+
+            <div class="panel-fact">
+                <h4>Una sola modalidad, un solo relevamiento</h4>
+                <div class="stats">
+                    <div class="stat"><strong>160</strong><span>denuncias registradas</span></div>
+                    <div class="stat"><strong>22</strong><span>cuentas digitales abiertas a nombre de las víctimas</span></div>
+                    <div class="stat"><strong>21</strong><span>bloqueadas tras la intervención fiscal</span></div>
+                </div>
+                <p class="spaced-top">
+                    Fuente: UFECI, Ministerio Público Fiscal de la Nación.<a href="#f1" class="ref">[1]</a>
+                    Las cuentas abiertas de esta forma se usan para recibir dinero de otros delitos,
+                    tomar créditos y dejar la deuda a nombre de la persona suplantada.
+                </p>
+            </div>
+
+            <h3>Por qué el número de trámite es el dato crítico</h3>
+
+            <p>
+                El número de documento no es secreto: figura en facturas, contratos y formularios.
+                Lo que convierte una foto en una llave es la combinación de ese número con el
+                <b>número de trámite</b>, que es lo que los organismos y las empresas usan para
+                confirmar que quien dice ser alguien tiene el documento en la mano.
+            </p>
+
+            <blockquote class="pull-quote">
+                Tener el número de DNI y el número de trámite equivale a tener una tarjeta de
+                crédito junto con su código de seguridad.<a href="#f2" class="ref">[2]</a>
+            </blockquote>
+
+            <p>
+                Esa es la asimetría que hay que entender: el destinatario legítimo necesita ver tu
+                foto, tu nombre y tu número de documento para verificar que sos vos. No necesita el
+                número de trámite. Todo lo que se comparte de más no agrega utilidad al trámite y sí
+                agrega riesgo.
+            </p>
+
+            <figure class="figure">
+                <div class="figure-frame">
+                    <svg class="diagram diagram-fit" viewBox="0 0 400 276" role="img"
+                         aria-label="Cadena de la suplantación en cuatro pasos: la foto del documento habilita la validación de identidad, la validación abre una cuenta a tu nombre y la cuenta deja deuda y causa judicial a tu nombre. Sin número de trámite la cadena se corta en el primer paso.">
+                        <path class="d-line" d="M24 40 V238"/>
+
+                        <circle class="d-mark" cx="24" cy="40" r="4.5"/>
+                        <text class="d-key" x="42" y="44">Foto del DNI</text>
+                        <text class="d-sub" x="42" y="62">frente, dorso y una selfie</text>
+                        <text class="d-sub" x="376" y="44" text-anchor="end">lo que compartís</text>
+
+                        <path class="d-line d-line-safe d-dash" d="M8 82 H36"/>
+                        <text class="d-sub d-safe" x="42" y="86">sin número de trámite, la cadena se corta acá</text>
+
+                        <circle class="d-mark" cx="24" cy="106" r="4.5"/>
+                        <text class="d-key" x="42" y="110">Validación de identidad</text>
+                        <text class="d-sub" x="42" y="128">número de DNI más número de trámite</text>
+                        <text class="d-sub" x="376" y="110" text-anchor="end">lo que superan</text>
+
+                        <circle class="d-mark d-mark-crit" cx="24" cy="172" r="4.5"/>
+                        <text class="d-key d-crit" x="42" y="176">Cuenta abierta a tu nombre</text>
+                        <text class="d-sub" x="42" y="194">en minutos, sin que lo sepas</text>
+                        <text class="d-sub" x="376" y="176" text-anchor="end">lo que no ves</text>
+
+                        <circle class="d-mark d-mark-crit" cx="24" cy="238" r="4.5"/>
+                        <text class="d-key d-crit" x="42" y="242">Deuda y causa judicial</text>
+                        <text class="d-sub" x="42" y="260">a tu nombre</text>
+                        <text class="d-sub" x="376" y="242" text-anchor="end">lo que te queda</text>
+                    </svg>
+                </div>
+                <figcaption>
+                    <b>Figura 1.</b> La cadena completa. El punto de corte más eficaz está al
+                    principio: si la copia que enviás no contiene los datos que permiten superar la
+                    validación, el resto de la cadena no se puede armar.
+                </figcaption>
+            </figure>
+        </section>
+
+        <!-- ============================================================ -->
+        <section class="section" id="codigo">
+            <h2><span class="number">Sección 02</span>Lo que realmente contiene un DNI</h2>
+
+            <p>
+                Casi todo el mundo que intenta protegerse tapa el número de trámite impreso y se
+                queda tranquilo. No alcanza, y el motivo es que el documento lleva los mismos datos
+                escritos dos veces: una en tinta, para que los leas vos, y otra en un código de
+                barras, para que los lea una máquina.
+            </p>
+
+            <p>
+                El código PDF417 del DNI argentino contiene nueve campos en texto plano, separados
+                por el carácter <code>@</code>. El primero es, justamente, el número de
+                trámite.<a href="#f3" class="ref">[3]</a>
+            </p>
+
+            <figure class="figure">
+                <div class="figure-frame">
+                    <svg class="diagram diagram-fit" viewBox="0 0 400 372" role="img"
+                         aria-label="Los nueve campos que cualquier lector obtiene del código PDF417 del DNI, en texto plano: número de trámite (crítico), apellidos, nombres, sexo, número de DNI (crítico), ejemplar, fecha de nacimiento, fecha de emisión y dígitos del CUIL.">
+                        <path class="d-ink" d="M8 26h4v40h-4z M15 26h2v40h-2z M19 26h3v40h-3z M24 26h1.5v40h-1.5z
+                              M27.5 26h1.5v40h-1.5z M32 26h3v40h-3z M37 26h3v40h-3z M42 26h4v40h-4z
+                              M48 26h1.5v40h-1.5z M51.5 26h3v40h-3z M57.5 26h2v40h-2z M63 26h2v40h-2z
+                              M67 26h2v40h-2z M72.5 26h2v40h-2z M76.5 26h1.5v40h-1.5z M80 26h2v40h-2z
+                              M84 26h2v40h-2z M88 26h2v40h-2z M93 26h2v40h-2z M97 26h2v40h-2z
+                              M101 26h3v40h-3z M107 26h1.5v40h-1.5z M111.5 26h3v40h-3z M116.5 26h2v40h-2z
+                              M121.5 26h1.5v40h-1.5z M126 26h2v40h-2z M130 26h4v40h-4z M137 26h1.5v40h-1.5z"/>
+                        <text class="d-key" x="152" y="42">Código PDF417</text>
+                        <text class="d-sub" x="152" y="60">impreso en el dorso</text>
+
+                        <path class="d-rule" d="M8 88 H376"/>
+                        <text class="d-sub" x="8" y="108">Lo que devuelve cualquier lector, en texto plano</text>
+                        <text class="d-tag" x="376" y="108" text-anchor="end">9 campos</text>
+
+                        <rect class="d-bar" x="8" y="125" width="3" height="15"/>
+                        <text class="d-field d-crit" x="22" y="136">Número de trámite</text>
+                        <text class="d-mono d-crit" x="196" y="136">40123456</text>
+                        <text class="d-tag d-crit" x="376" y="136" text-anchor="end">crítico</text>
+                        <path class="d-rule" d="M8 145 H376"/>
+
+                        <text class="d-field" x="22" y="163">Apellidos</text>
+                        <text class="d-mono" x="196" y="163">PEREZ</text>
+                        <path class="d-rule" d="M8 172 H376"/>
+
+                        <text class="d-field" x="22" y="190">Nombres</text>
+                        <text class="d-mono" x="196" y="190">JUAN CARLOS</text>
+                        <path class="d-rule" d="M8 199 H376"/>
+
+                        <text class="d-field" x="22" y="217">Sexo</text>
+                        <text class="d-mono" x="196" y="217">M</text>
+                        <path class="d-rule" d="M8 226 H376"/>
+
+                        <rect class="d-bar" x="8" y="233" width="3" height="15"/>
+                        <text class="d-field d-crit" x="22" y="244">Número de DNI</text>
+                        <text class="d-mono d-crit" x="196" y="244">30123456</text>
+                        <text class="d-tag d-crit" x="376" y="244" text-anchor="end">crítico</text>
+                        <path class="d-rule" d="M8 253 H376"/>
+
+                        <text class="d-field" x="22" y="271">Ejemplar</text>
+                        <text class="d-mono" x="196" y="271">A</text>
+                        <path class="d-rule" d="M8 280 H376"/>
+
+                        <text class="d-field" x="22" y="298">Fecha de nacimiento</text>
+                        <text class="d-mono" x="196" y="298">01/05/1990</text>
+                        <path class="d-rule" d="M8 307 H376"/>
+
+                        <text class="d-field" x="22" y="325">Fecha de emisión</text>
+                        <text class="d-mono" x="196" y="325">12/03/2019</text>
+                        <path class="d-rule" d="M8 334 H376"/>
+
+                        <text class="d-field" x="22" y="352">Dígitos del CUIL</text>
+                        <text class="d-mono" x="196" y="352">20-4</text>
+                        <path class="d-rule" d="M8 361 H376"/>
+                    </svg>
+                </div>
+                <figcaption>
+                    <b>Figura 2.</b> Los nueve campos del código PDF417. Tapar el número de trámite
+                    impreso y dejar el código a la vista no protege nada: el dato sigue ahí, en
+                    texto plano, al alcance de cualquier lector de códigos.
+                </figcaption>
+            </figure>
+
+            <p>
+                Lo mismo vale para la zona de lectura mecánica del dorso (las líneas con
+                <code>&lt;&lt;&lt;&lt;&lt;</code>), que por diseño es una transcripción de tus datos
+                legible por máquina, y para el código QR que reemplazó al PDF417 en los documentos
+                emitidos desde 2023.<a href="#f4" class="ref">[4]</a>
+            </p>
+
+            <div class="panel-fact panel-alert">
+                <h4>Consecuencia práctica</h4>
+                <p>
+                    El primer objetivo al proteger una copia no es el número impreso: es el código
+                    de barras o QR. El número impreso es secundario, porque su contenido ya viaja
+                    dentro del código.
+                </p>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <section class="section" id="reversible">
+            <h2><span class="number">Sección 03</span>Por qué desenfocar no alcanza</h2>
+
+            <p>
+                La intuición dice que si un dato se ve borroso, está protegido. Es falsa, y el
+                motivo es matemático: el desenfoque y el pixelado <b>no eliminan información, la
+                redistribuyen</b>. Todo lo que hacen es una transformación, y una transformación se
+                puede intentar deshacer.
+            </p>
+
+            <h3>El desenfoque</h3>
+
+            <p>
+                Un desenfoque gaussiano es una convolución: cada píxel de salida es el promedio
+                ponderado de sus vecinos. Los datos originales siguen presentes, mezclados según una
+                fórmula conocida. Si se estima esa fórmula (y los desenfoques habituales son pocos
+                y conocidos), el proceso se invierte total o parcialmente.
+            </p>
+
+            <h3>El pixelado</h3>
+
+            <p>
+                El pixelado es peor de lo que parece, porque cada bloque del mosaico es literalmente
+                <b>el promedio de los píxeles que tapa</b>. Es decir: el bloque es una medición
+                directa del contenido oculto. No hay que invertir nada complicado; alcanza con
+                probar candidatos.
+            </p>
+
+            <figure class="figure">
+                <div class="figure-frame">
+                    <svg class="diagram diagram-fit" viewBox="0 0 400 268" role="img"
+                         aria-label="Cuánta información del original sobrevive a cada técnica. Las que transforman el contenido conservan información: desenfoque, alta; pixelado, muy alta; rotación o remolino, total. Las que lo reemplazan no conservan nada: relleno sólido, cero; ruido aleatorio, cero.">
+                        <text class="d-title" x="8" y="22">Cuánta información del original sobrevive</text>
+
+                        <text class="d-sub" x="8" y="54">Transforman el contenido: sigue estando ahí</text>
+
+                        <text class="d-key" x="8" y="82">Desenfoque</text>
+                        <rect class="d-track" x="152" y="73" width="168" height="10" rx="5"/>
+                        <rect class="d-bar" x="152" y="73" width="144" height="10" rx="5"/>
+                        <text class="d-sub d-crit" x="376" y="82" text-anchor="end">alta</text>
+
+                        <text class="d-key" x="8" y="112">Pixelado</text>
+                        <rect class="d-track" x="152" y="103" width="168" height="10" rx="5"/>
+                        <rect class="d-bar" x="152" y="103" width="156" height="10" rx="5"/>
+                        <text class="d-sub d-crit" x="376" y="112" text-anchor="end">muy alta</text>
+
+                        <text class="d-key" x="8" y="142">Rotación o remolino</text>
+                        <rect class="d-track" x="152" y="133" width="168" height="10" rx="5"/>
+                        <rect class="d-bar" x="152" y="133" width="168" height="10" rx="5"/>
+                        <text class="d-sub d-crit" x="376" y="142" text-anchor="end">total</text>
+
+                        <text class="d-sub" x="8" y="184">Lo reemplazan: no queda nada del original</text>
+
+                        <text class="d-key" x="8" y="212">Relleno sólido</text>
+                        <rect class="d-track" x="152" y="203" width="168" height="10" rx="5"/>
+                        <text class="d-sub d-safe" x="376" y="212" text-anchor="end">cero</text>
+
+                        <text class="d-key" x="8" y="242">Ruido aleatorio</text>
+                        <rect class="d-track" x="152" y="233" width="168" height="10" rx="5"/>
+                        <text class="d-sub d-safe" x="376" y="242" text-anchor="end">cero</text>
+                    </svg>
+                </div>
+                <figcaption>
+                    <b>Figura 3.</b> La diferencia no es de grado sino de naturaleza. Las tres
+                    primeras técnicas <b>transforman</b> el contenido y por lo tanto conservan
+                    información sobre él. Las dos últimas lo <b>reemplazan</b> por algo que no
+                    depende del original: no hay nada que recuperar porque no queda nada.
+                </figcaption>
+            </figure>
+
+            <p>
+                Esto no es una conjetura. En 2016, investigadores de la Universidad de California
+                en San Diego publicaron un trabajo revisado por pares que reconstruye texto
+                pixelado y desenfocado usando modelos ocultos de Markov. Su conclusión es
+                explícita: el mosaico y el desenfoque <em>«no son enfoques viables para
+                tachar texto en documentos»</em>.<a href="#f5" class="ref">[5]</a>
+            </p>
+
+            <p>
+                Existen además herramientas públicas y de uso libre que implementan estos ataques.
+                Depix reconstruye texto pixelado buscando qué combinaciones de píxeles pudieron
+                producir cada bloque.<a href="#f6" class="ref">[6]</a> Unredacter, publicada por la
+                consultora de seguridad Bishop Fox en 2022, mejora ese resultado y viene acompañada
+                de una recomendación de una sola línea: nunca usar pixelado para tapar
+                texto.<a href="#f7" class="ref">[7]</a>
+            </p>
+
+            <div class="panel-fact">
+                <h4>Antecedente</h4>
+                <p>
+                    En 2007, Interpol identificó a un prófugo revirtiendo el efecto de remolino con
+                    el que había distorsionado su rostro en una serie de fotografías. El remolino
+                    reordenaba los píxeles sin destruirlos, y por lo tanto era invertible. Toda
+                    técnica que transforma en lugar de reemplazar es una promesa de reversibilidad
+                    futura: lo que hoy resiste, mañana puede no resistir.
+                </p>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <section class="section" id="demostracion">
+            <h2><span class="number">Sección 04</span>Demostración: recuperar texto pixelado</h2>
+
+            <p>
+                Lo anterior se puede comprobar sin instalar nada. La demostración que sigue ejecuta
+                un ataque de diccionario real en tu navegador, sobre un número que se pixela en el
+                momento.
+            </p>
+
+            <p>El procedimiento es el que usaría un atacante:</p>
+
+            <ol>
+                <li>Toma la zona pixelada del documento.</li>
+                <li>Genera un candidato (por ejemplo, el dígito <code>0</code>) con la misma
+                    tipografía y tamaño que usa el documento.</li>
+                <li>Le aplica el mismo pixelado.</li>
+                <li>Compara el resultado con la zona original. Si coinciden, encontró el dígito.</li>
+                <li>Repite para cada posición.</li>
+            </ol>
+
+            <p>
+                No hace falta invertir ninguna operación. Alcanza con probar: los dígitos posibles
+                son diez, y un documento estandarizado como el DNI usa una tipografía conocida.
+            </p>
+
+            <div class="demo" id="pixelDemo">
+                <div class="demo-panel">
+                    <div class="demo-row">
+                        <div class="demo-cell">
+                            <h4>Original</h4>
+                            <canvas id="cvOriginal" width="320" height="60"></canvas>
+                        </div>
+                        <div class="demo-cell">
+                            <h4>Pixelado</h4>
+                            <canvas id="cvPixelated" width="320" height="60"></canvas>
+                        </div>
+                        <div class="demo-cell">
+                            <h4>Reconstruido por el ataque</h4>
+                            <canvas id="cvRecovered" width="320" height="60"></canvas>
+                        </div>
+                    </div>
+                    <p class="demo-status" id="demoStatus">
+                        Presioná «Ejecutar el ataque» para reconstruir el número a partir de la
+                        imagen pixelada.
+                    </p>
+                    <div class="demo-controls">
+                        <button type="button" id="btnAttack">Ejecutar el ataque</button>
+                        <button type="button" id="btnOtherNumber">Otro número</button>
+                    </div>
+                </div>
+                <p class="figure-caption">
+                    <b>Figura 4.</b> El ataque se ejecuta íntegramente en tu navegador y no envía
+                    nada a ningún lado. Es el caso favorable para el atacante: conoce la tipografía
+                    y el tamaño. Con un documento estandarizado, esa es exactamente su situación.
+                </p>
+            </div>
+
+            <p>
+                Para contrastar: aplicado sobre una zona con relleno sólido, el mismo ataque no
+                tiene nada con qué comparar. Todos los candidatos producen el mismo resultado, un
+                rectángulo opaco, y por lo tanto ninguno se distingue de los demás. No es que sea
+                difícil de romper: es que no hay información que recuperar.
+            </p>
+        </section>
+
+        <!-- ============================================================ -->
+        <section class="section" id="destruir">
+            <h2><span class="number">Sección 05</span>Qué significa destruir la información</h2>
+
+            <p>
+                De lo anterior se desprende un criterio que se puede enunciar con precisión y, sobre
+                todo, verificar leyendo el código:
+            </p>
+
+            <blockquote class="pull-quote">
+                El valor de cada píxel de salida dentro de una zona tapada debe ser independiente
+                del valor original de todos los píxeles de esa zona.
+            </blockquote>
+
+            <p>
+                Si se cumple, la salida no contiene información sobre el contenido oculto, y no hay
+                ataque posible: no porque sea costoso, sino porque no queda nada que atacar. Copia
+                Segura ofrece únicamente dos técnicas, y las dos lo cumplen.
+            </p>
+
+            <table>
+                <thead>
+                    <tr><th>Técnica</th><th>Qué hace</th><th>Información conservada</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>Relleno sólido</b></td>
+                        <td>Sobrescribe la zona con un color constante.</td>
+                        <td>Ninguna. El resultado es idéntico cualquiera sea el contenido tapado.</td>
+                    </tr>
+                    <tr>
+                        <td><b>Ruido criptográfico</b></td>
+                        <td>Sobrescribe la zona con valores de <code>crypto.getRandomValues()</code>.</td>
+                        <td>Ninguna. El ruido proviene del generador del sistema operativo, no de la imagen.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                La segunda técnica exige una advertencia. El ruido solo es seguro si es
+                <b>independiente</b> del contenido. Un ruido derivado de los píxeles originales
+                (perturbarlos, mezclarlos, reordenarlos) sería una fuga con apariencia de seguridad,
+                del mismo tipo que el remolino de 2007. Por eso el generador es el criptográfico del
+                sistema y no una función de la imagen.
+            </p>
+
+            <p>
+                El desenfoque y el pixelado no están disponibles en la herramienta. La decisión fue
+                eliminarlos del código, no ofrecerlos con una advertencia: una opción insegura con
+                un cartel al lado es una trampa para el usuario apurado, que es precisamente el
+                usuario al que hay que proteger.
+            </p>
+
+            <h3>Destructivo sobre el original, no sobre la vista previa</h3>
+
+            <p>
+                Hay un error clásico en las herramientas de edición: dibujar el rectángulo sobre la
+                vista previa reducida y exportar después la imagen original a resolución completa,
+                con el dato intacto. Copia Segura aplica todas las operaciones sobre el mapa de bits
+                a resolución nativa; lo que ves en pantalla es un espejo de solo lectura de ese mapa
+                de bits, nunca al revés.
+            </p>
+        </section>
+
+        <!-- ============================================================ -->
+        <section class="section" id="fugas">
+            <h2><span class="number">Sección 06</span>Las fugas que no están en los píxeles</h2>
+
+            <p>
+                Tapar bien los datos visibles es la mitad del problema. Los casos reales de
+                ocultamiento fallido casi siempre ocurren por caminos que no tienen nada que ver con lo
+                que se ve en pantalla.
+            </p>
+
+            <h3>La miniatura incrustada</h3>
+
+            <p>
+                Los archivos JPEG de cámara incluyen metadatos EXIF: fecha, modelo del equipo,
+                coordenadas GPS y, esto es lo importante, <b>una miniatura de la imagen</b>. Muchos
+                editores modifican la imagen grande y dejan la miniatura intacta. El resultado es un
+                archivo que se ve tapado al abrirlo y muestra el original sin tapar al extraerle los
+                metadatos.
+            </p>
+
+            <h3>Los bytes que sobran</h3>
+
+            <p>
+                En 2023 se descubrió aCropalypse, una vulnerabilidad en la herramienta de edición de
+                capturas de los teléfonos Google Pixel, registrada como CVE-2023-21036. Al recortar
+                una captura, la aplicación escribía el archivo nuevo <b>encima</b> del anterior sin
+                borrarlo primero. Como el archivo nuevo era más chico, los bytes sobrantes del
+                original quedaban al final. Se podía recuperar alrededor del 80 % de la imagen
+                original a partir de esos restos, y afectó a toda captura editada en cinco
+                años.<a href="#f8" class="ref">[8]</a>
+            </p>
+
+            <figure class="figure">
+                <div class="figure-frame">
+                    <svg class="diagram diagram-fit" viewBox="0 0 400 236" role="img"
+                         aria-label="El error de aCropalypse: el archivo editado, más chico, se escribe encima del original sin borrarlo, así que la parte final del archivo original queda en el disco y de esos restos se recupera hasta el 80 por ciento de la imagen sin tapar.">
+                        <text class="d-title" x="8" y="22">El error de aCropalypse</text>
+
+                        <text class="d-sub" x="8" y="50">1. El archivo original</text>
+                        <text class="d-sub" x="376" y="50" text-anchor="end">acá termina la versión editada</text>
+                        <rect class="d-box" x="8" y="58" width="368" height="26" rx="4"/>
+                        <text class="d-sub" x="128" y="75" text-anchor="middle">imagen completa, sin tapar</text>
+
+                        <text class="d-sub" x="8" y="112">2. Se sobrescribe con la versión editada</text>
+                        <rect class="d-box-safe" x="8" y="120" width="240" height="26" rx="4"/>
+                        <text class="d-sub" x="128" y="137" text-anchor="middle">imagen editada</text>
+                        <rect class="d-box-crit" x="248" y="120" width="128" height="26" rx="4"/>
+                        <text class="d-sub d-crit" x="312" y="137" text-anchor="middle">restos del original</text>
+
+                        <text class="d-sub" x="8" y="174">3. Lo que se recupera de esos restos</text>
+                        <rect class="d-bar" x="248" y="182" width="128" height="22" rx="4"/>
+                        <text class="d-sub d-crit" x="376" y="222" text-anchor="end">hasta el 80 % de la imagen original</text>
+
+                        <path class="d-line d-line-crit d-dash" d="M248 54 V208"/>
+                    </svg>
+                </div>
+                <figcaption>
+                    <b>Figura 5.</b> El archivo no era lo que aparentaba. Este tipo de falla no se
+                    detecta mirando la imagen: hay que mirar los bytes.
+                </figcaption>
+            </figure>
+
+            <h3>Cómo se cierran estas fugas</h3>
+
+            <p>
+                Copia Segura no edita el archivo que subiste. Genera uno nuevo desde cero a partir
+                del mapa de bits, con <code>canvas.toBlob()</code>. Ningún byte del archivo original
+                se copia al resultado, y de ahí se desprenden tres consecuencias:
+            </p>
+
+            <ul>
+                <li>Los metadatos EXIF, la geolocalización y la miniatura incrustada no sobreviven,
+                    porque no se copia nada de donde vivían.</li>
+                <li>No puede haber bytes residuales del tipo aCropalypse, porque no existe un
+                    archivo previo al que sobrescribir.</li>
+                <li>El nombre del archivo, que también es un dato personal
+                    (<code>DNI_juan_alquiler.jpg</code> dice bastante), se reemplaza por uno
+                    genérico con la fecha.</li>
+            </ul>
+
+            <p>
+                El historial de deshacer, por su parte, vive únicamente en memoria. Guardarlo en el
+                disco sería dejar una copia sin tapar del documento en el dispositivo, que es
+                exactamente lo que la herramienta intenta evitar.
+            </p>
+        </section>
+
+        <!-- ============================================================ -->
+        <section class="section" id="pipeline">
+            <h2><span class="number">Sección 07</span>Qué hace la herramienta, paso a paso</h2>
+
+            <p>
+                El recorrido completo de la imagen, desde que se abre hasta que se descarga, ocurre
+                dentro del navegador. No hay servidor que reciba nada porque no hay servidor: el
+                sitio son archivos estáticos.
+            </p>
+
+            <figure class="figure">
+                <div class="figure-frame">
+                    <svg class="diagram diagram-fit" viewBox="0 0 400 396" role="img"
+                         aria-label="Recorrido de la imagen dentro del navegador: se abre el archivo, se convierte en mapa de bits en memoria (ahí muere el EXIF), se tapan las zonas elegidas, se agrega la marca de agua opcional y se genera un archivo nuevo desde el mapa de bits. Nunca hay conexiones de salida, datos guardados en disco ni analítica.">
+                        <rect class="d-frame" x="8" y="30" width="368" height="262" rx="12"/>
+                        <text class="d-sub" x="24" y="52">Tu navegador. Nada de lo que sigue sale de acá.</text>
+
+                        <path class="d-line" d="M40 76 V252"/>
+
+                        <circle class="d-mark" cx="40" cy="76" r="4.5"/>
+                        <text class="d-key" x="58" y="80">Se abre el archivo</text>
+                        <text class="d-sub" x="58" y="97">JPG o PNG, desde tu equipo</text>
+
+                        <circle class="d-mark" cx="40" cy="128" r="4.5"/>
+                        <text class="d-key" x="58" y="132">Mapa de bits en memoria</text>
+                        <text class="d-sub" x="58" y="149">a resolución nativa</text>
+                        <text class="d-sub d-safe" x="360" y="132" text-anchor="end">acá muere el EXIF</text>
+
+                        <circle class="d-mark" cx="40" cy="180" r="4.5"/>
+                        <text class="d-key" x="58" y="184">Se tapan las zonas elegidas</text>
+                        <text class="d-sub" x="360" y="184" text-anchor="end">destructivo</text>
+
+                        <circle class="d-mark" cx="40" cy="216" r="4.5"/>
+                        <text class="d-key" x="58" y="220">Marca de agua</text>
+                        <text class="d-sub" x="360" y="220" text-anchor="end">opcional</text>
+
+                        <circle class="d-mark" cx="40" cy="252" r="4.5"/>
+                        <text class="d-key" x="58" y="256">Archivo nuevo</text>
+                        <text class="d-sub" x="58" y="273">se genera desde el mapa de bits, no desde tu archivo</text>
+                        <text class="d-sub" x="360" y="256" text-anchor="end">se descarga</text>
+
+                        <text class="d-key" x="8" y="322">Lo que nunca ocurre:</text>
+                        <path class="d-line d-line-crit" d="M8 340 l8 8 M16 340 l-8 8"/>
+                        <text class="d-sub" x="26" y="348">ninguna conexión de salida</text>
+                        <path class="d-line d-line-crit" d="M8 360 l8 8 M16 360 l-8 8"/>
+                        <text class="d-sub" x="26" y="368">ningún dato guardado en disco</text>
+                        <path class="d-line d-line-crit" d="M8 380 l8 8 M16 380 l-8 8"/>
+                        <text class="d-sub" x="26" y="388">ninguna analítica</text>
+                    </svg>
+                </div>
+                <figcaption>
+                    <b>Figura 6.</b> El recorrido completo. El archivo final se genera a partir del
+                    mapa de bits, no del archivo que subiste: esa decisión es la que elimina de raíz
+                    toda la familia de fugas de la sección anterior.
+                </figcaption>
+            </figure>
+
+            <h3>Sin conexiones de salida, y que lo imponga el navegador</h3>
+
+            <p>
+                La aplicación no contiene ninguna de las funciones que permitirían enviar datos:
+                <code>fetch</code>, <code>XMLHttpRequest</code>, <code>sendBeacon</code>,
+                <code>WebSocket</code> ni formularios. Pero no hace falta creer en eso. El servidor
+                envía una directiva <code>Content-Security-Policy</code> con
+                <code>default-src 'self'</code> y <code>connect-src 'none'</code>. La primera impide
+                que la página contacte cualquier dominio externo, incluso para cargar una imagen. La
+                segunda hace que <b>el navegador bloquee</b> <code>fetch</code>,
+                <code>XMLHttpRequest</code>, <code>sendBeacon</code> y WebSocket. Aunque alguien
+                lograra inyectar código malicioso, no tendría por dónde sacar los datos.
+            </p>
+
+            <p>
+                Tampoco se cargan recursos de terceros: ni tipografías remotas, ni bibliotecas desde
+                una red de distribución, ni herramientas de medición. La cantidad de dominios
+                externos que la página contacta es cero.
+            </p>
+        </section>
+
+        <!-- ============================================================ -->
+        <section class="section" id="marca">
+            <h2><span class="number">Sección 08</span>La marca de agua y el código de copia</h2>
+
+            <p>
+                Tapar datos reduce el daño si la copia se filtra, pero no dice nada sobre
+                <b>quién</b> la filtró. Para eso sirve la marca de agua, que cumple dos funciones
+                distintas.
+            </p>
+
+            <p>
+                La primera es disuasiva y explícita: un texto repetido en diagonal sobre todo el
+                documento con el destinatario, el propósito y la fecha. Una copia que dice «para
+                Inmobiliaria San Martín, garantía de alquiler» pierde utilidad en cualquier otro
+                contexto, y quien la reciba sabe que su nombre quedó impreso en ella.
+            </p>
+
+            <p>
+                La segunda es el <b>código de copia</b>: un resumen criptográfico
+                <code>SHA-256</code> del destinatario, el propósito y la fecha, truncado y repetido
+                dentro del patrón. Si la imagen aparece donde no debía y alguien recortó el texto
+                grande, el código sigue identificando de qué copia se trata.
+            </p>
+
+            <figure class="figure">
+                <div class="figure-frame">
+                    <svg class="diagram diagram-fit" viewBox="0 0 400 196" role="img"
+                         aria-label="El código de copia: el destinatario, el propósito y la fecha entran a un SHA-256 calculado en tu navegador y sale un código corto. El código no se guarda: se recalcula a partir de los mismos tres datos.">
+                        <text class="d-key" x="8" y="52">Destinatario</text>
+                        <text class="d-key" x="8" y="78">Propósito</text>
+                        <text class="d-key" x="8" y="104">Fecha</text>
+                        <path class="d-line" d="M100 42 H108 V106 H100"/>
+
+                        <path class="d-line" d="M108 74 H126"/>
+                        <polygon class="d-mark" points="132,74 123,70 123,78"/>
+
+                        <rect class="d-box" x="140" y="50" width="108" height="50" rx="8"/>
+                        <text class="d-key" x="194" y="72" text-anchor="middle">SHA-256</text>
+                        <text class="d-sub" x="194" y="90" text-anchor="middle">en tu navegador</text>
+
+                        <path class="d-line" d="M248 74 H260"/>
+                        <polygon class="d-mark" points="266,74 257,70 257,78"/>
+
+                        <text class="d-sub" x="324" y="42" text-anchor="middle">código de copia</text>
+                        <rect class="d-box-safe" x="272" y="50" width="104" height="50" rx="8"/>
+                        <text class="d-code" x="324" y="82" text-anchor="middle">A7F3C21B90</text>
+
+                        <path class="d-line d-dash" d="M324 110 V138 H56 V122"/>
+                        <polygon class="d-mark" points="56,116 52,125 60,125"/>
+                        <text class="d-sub" x="8" y="170">No se guarda: se recalcula con los mismos tres datos.</text>
+                    </svg>
+                </div>
+                <figcaption>
+                    <b>Figura 7.</b> El código es reproducible, no almacenado. Para saber qué copia
+                    se filtró alcanza con recalcular los códigos de las copias que emitiste y buscar
+                    la coincidencia. La herramienta no necesita llevar registro de nada.
+                </figcaption>
+            </figure>
+
+            <div class="panel-fact">
+                <h4>Por qué no usamos marcas invisibles</h4>
+                <p>
+                    Existe la esteganografía: ocultar el identificador en los bits menos
+                    significativos de la imagen, de modo que no se vea. No la usamos, y la
+                    investigación respalda esa decisión. Zhao y otros demostraron en 2024, con
+                    pruebas formales y evaluación sobre cuatro esquemas distintos, que las marcas
+                    invisibles a nivel de píxel <b>son removibles</b>: alcanza con agregarle ruido a
+                    la imagen y reconstruirla con un modelo generativo. Los autores concluyen que
+                    conviene abandonarlas en favor de marcas que preserven la semántica de la
+                    imagen.<a href="#f9" class="ref">[9]</a>
+                </p>
+                <p>
+                    A eso se suma lo evidente: una marca invisible tampoco sobrevive a una
+                    recompresión de mensajería ni a una captura de pantalla. Prometer un rastreo
+                    invisible sería vender una seguridad que no existe.
+                </p>
+            </div>
+        </section>
+
+            <h3>Qué tan removible es</h3>
+
+            <p>
+                Conviene separar dos cosas que suelen confundirse: <b>la marca de agua no protege los
+                datos, eso lo hace el ocultamiento</b>. La marca aporta disuasión y atribución. Y a
+                diferencia del relleno destructivo, que es irreversible, una marca visible sí se
+                puede atacar.
+            </p>
+
+            <p>
+                Hay un campo de investigación dedicado a removerlas, así que el riesgo se puede
+                ubicar con datos en lugar de suposiciones. Leng y otros evaluaron en 2025
+                específicamente las marcas de <b>gran área</b>, que es la categoría de esta, y
+                reportan que los modelos existentes todavía tienen dificultades con ellas: el mejor
+                método alcanza una reconstrucción de 26,8 dB de PSNR.<a href="#f10" class="ref">[10]</a>
+                Para dimensionarlo, una copia prácticamente indistinguible del original estaría por
+                encima de 40 dB, de modo que a 27 dB quedan diferencias perceptibles.
+            </p>
+
+            <p>
+                Un dato más útil todavía: el relleno generativo de propósito general, el que usan las
+                aplicaciones de consumo para borrar objetos, rinde bastante peor en esta tarea
+                concreta (17,97 dB en el mismo conjunto de prueba). Remover esta marca no es apretar
+                un botón en una app: requiere un modelo especializado.
+            </p>
+
+            <p>Lo que la ubica en la categoría difícil:</p>
+
+            <ul>
+                <li>Cubre el documento entero en mosaico. No es un logo en una esquina que se
+                    resuelve recortando.</li>
+                <li>Se superpone a propósito sobre las zonas de alto detalle, así que removerla
+                    obliga a reconstruir contenido cuyo valor depende de ser exacto.</li>
+                <li>El código se repite muchas veces: hay que eliminar todas las instancias.</li>
+                <li>Sobre un documento, los artefactos son visibles para quien lo verifica, y una
+                    imagen retocada pierde valor frente a quien exige ver la marca.</li>
+            </ul>
+
+            <p>
+                <b>Y el límite, sin adornos:</b> difícil no es imposible. Alguien con un modelo
+                especializado y motivación suficiente puede remover buena parte de la marca, y ahí la
+                atribución se debilita. Lo que no se debilita es el ocultamiento, que es donde vive la
+                protección real.
+            </p>
+        </section>
+
+        <!-- ============================================================ -->
+        <section class="section" id="verificar">
+            <h2><span class="number">Sección 09</span>Cómo verificar que nada se sube</h2>
+
+            <p>
+                Cualquier sitio puede afirmar que procesa los datos localmente. Es exactamente lo
+                que diría también un sitio malicioso. Por eso la afirmación importante no es la
+                promesa sino el método para comprobarla.
+            </p>
+
+            <h3>La prueba de la desconexión</h3>
+
+            <p>
+                Es la más simple y la más difícil de refutar. Abrí la herramienta, esperá a que
+                cargue, <b>cortá la conexión a internet</b> (modo avión, apagar el wifi,
+                desenchufar el cable) y usala igual. Si podés cargar la foto, tapar los datos y descargar el
+                resultado sin conexión, no hubo transmisión posible. No es una cuestión de
+                confianza: no hay forma de que un archivo viaje por una conexión que no existe.
+            </p>
+
+            <h3>Mirar el tráfico</h3>
+
+            <p>
+                Con las herramientas de desarrollo del navegador abiertas en la pestaña de red, y la
+                casilla de conservar el registro activada, se puede hacer el recorrido completo y
+                filtrar por método <code>POST</code>. No debería aparecer ninguno. Subir un archivo
+                requiere una conexión de salida, y las conexiones de salida quedan registradas ahí
+                sin excepción.
+            </p>
+
+            <h3>Leer el código</h3>
+
+            <p>
+                El sitio no usa empaquetadores ni minificación. Los archivos que sirve el servidor
+                son los mismos que están publicados en el repositorio, legibles tal cual. Esa
+                decisión tiene un costo en comodidad de desarrollo y una única razón de ser: si el
+                código que se ejecuta no se puede leer, la verificabilidad es un eslogan.
+            </p>
+
+            <p>
+                La guía completa, con los cuatro niveles de verificación y qué esperar en cada uno,
+                está en el <a href="verificacion.html">documento de verificación</a>.
+            </p>
+        </section>
+
+        <!-- ============================================================ -->
+        <section class="section" id="limites">
+            <h2><span class="number">Sección 10</span>Lo que esta herramienta no puede hacer</h2>
+
+            <p>
+                Una explicación honesta tiene que incluir los límites. Copia Segura no protege
+                contra:
+            </p>
+
+            <ul>
+                <li><b>El destinatario legítimo.</b> Si le mandás la copia a alguien y esa persona
+                    la usa mal o la filtra, la herramienta no puede impedirlo. La marca de agua
+                    ayuda a identificar el origen de la filtración, no a evitarla.</li>
+                <li><b>Un dispositivo comprometido.</b> Si tenés programas maliciosos o una
+                    extensión de navegador hostil, ninguna página web puede protegerte. La seguridad
+                    de esta herramienta presupone un equipo sano.</li>
+                <li><b>Lo que decidas dejar visible.</b> La herramienta no juzga: si dejás a la
+                    vista un dato que no correspondía, va a quedar a la vista.</li>
+                <li><b>Copias anteriores.</b> Si ya mandaste el documento sin proteger, esa imagen
+                    sigue circulando. Proteger las copias futuras no recupera las pasadas.</li>
+                <li><b>La remoción de la marca de agua.</b> Una marca visible puede atacarse con
+                    relleno generativo. La mitigación es superponerla sobre zonas de alto detalle,
+                    donde removerla degrada lo que hace útil al documento, pero no es una barrera
+                    absoluta.</li>
+            </ul>
+
+            <p>
+                Tampoco reemplaza al criterio: antes de tapar, conviene preguntarle al destinatario
+                qué necesita ver. Una copia sobre-ofuscada suele ser rechazada, y ahí la persona
+                termina mandando el documento entero sin ninguna protección, que es el peor
+                resultado posible.
+            </p>
+        </section>
+
+        <!-- ============================================================ -->
+        <section class="section sources" id="fuentes">
+            <h2><span class="number">Sección 11</span>Fuentes</h2>
+
+            <ol>
+                <li id="f1">
+                    Unidad Fiscal Especializada en Ciberdelincuencia (UFECI), Ministerio Público
+                    Fiscal de la Nación. «Pedidos de selfies y de fotos del DNI: aumentan los
+                    fraudes vinculados con los servicios puerta a puerta del Correo Argentino».
+                    <span class="publication">
+                        <a href="https://www.fiscales.gob.ar/ciberdelincuencia/pedidos-de-selfies-y-de-fotos-del-dni-aumentan-los-fraudes-vinculados-con-los-servicios-puerta-a-puerta-del-correo-argentino/" target="_blank" rel="noopener noreferrer">fiscales.gob.ar</a>
+                    </span>
+                </li>
+                <li id="f2">
+                    La Nación. «La estafa de la transferencia por error y la venta apurada: por qué
+                    nunca hay que compartir el número de trámite del DNI», julio de 2022.
+                    <span class="publication">
+                        <a href="https://www.lanacion.com.ar/tecnologia/la-estafa-de-la-transferencia-por-error-y-la-venta-apurada-por-que-nunca-hay-que-compartir-el-numero-nid08072022/" target="_blank" rel="noopener noreferrer">lanacion.com.ar</a>
+                    </span>
+                </li>
+                <li id="f3">
+                    «Parseo del código PDF417 del DNI argentino». Documentación de la estructura de
+                    los nueve campos del código de barras.
+                    <span class="publication">
+                        <a href="https://estandaresparadummies.blogspot.com/2020/12/parseo-del-codigo-pdf417-del-dni.html" target="_blank" rel="noopener noreferrer">estandaresparadummies.blogspot.com</a>
+                    </span>
+                </li>
+                <li id="f4">
+                    Registro Nacional de las Personas. Disposición 1255/2023, características del
+                    Documento Nacional de Identidad electrónico.
+                    <span class="publication">
+                        <a href="https://www.argentina.gob.ar/normativa/nacional/disposici%C3%B3n-1255-2023-394189/actualizacion" target="_blank" rel="noopener noreferrer">argentina.gob.ar</a>
+                    </span>
+                </li>
+                <li id="f5">
+                    Hill, S.; Zhou, Z.; Saul, L.; Shacham, H. «On the (In)effectiveness of Mosaicing
+                    and Blurring as Tools for Document Redaction». <i>Proceedings on Privacy
+                    Enhancing Technologies</i>, vol. 2016, n.º 4, pp. 403-417.
+                    <span class="publication">
+                        <a href="https://petsymposium.org/popets/2016/popets-2016-0047.php" target="_blank" rel="noopener noreferrer">petsymposium.org</a>
+                    </span>
+                </li>
+                <li id="f6">
+                    Depix. Herramienta de reconstrucción de texto pixelado.
+                    <span class="publication">
+                        <a href="https://thehackernews.com/2022/02/this-new-tool-can-retrieve-pixelated.html" target="_blank" rel="noopener noreferrer">Cobertura en The Hacker News</a>
+                    </span>
+                </li>
+                <li id="f7">
+                    Petro, D. «Never Use Text Pixelation To Redact Sensitive Information».
+                    Bishop Fox, 2022. Presentación de la herramienta Unredacter.
+                    <span class="publication">
+                        <a href="https://bishopfox.com/blog/unredacter-tool-never-pixelation" target="_blank" rel="noopener noreferrer">bishopfox.com</a>
+                    </span>
+                </li>
+                <li id="f8">
+                    aCropalypse (CVE-2023-21036). Vulnerabilidad en la herramienta Markup de Google
+                    Pixel, descubierta por Simon Aarons y David Buchanan.
+                    <span class="publication">
+                        <a href="https://en.wikipedia.org/wiki/ACropalypse" target="_blank" rel="noopener noreferrer">Resumen técnico y cronología</a>
+                    </span>
+                </li>
+                <li id="f9">
+                    Zhao, X.; Zhang, K.; Su, Z.; Vasan, S.; Grishchenko, I.; Kruegel, C.; Vigna, G.;
+                    Wang, Y.-X.; Li, L. «Invisible Image Watermarks Are Provably Removable Using
+                    Generative AI». <i>Advances in Neural Information Processing Systems</i>
+                    (NeurIPS), 2024.
+                    <span class="source-pub">
+                        <a href="https://proceedings.neurips.cc/paper_files/paper/2024/file/10272bfd0371ef960ec557ed6c866058-Paper-Conference.pdf" target="_blank" rel="noopener noreferrer">proceedings.neurips.cc</a>
+                    </span>
+                </li>
+                <li id="f10">
+                    Leng, Y.; Fang, C.; Chen, J.; Fang, Y.; Li, S.; Li, G. «Bridging Knowledge Gap
+                    Between Image Inpainting and Large-Area Visible Watermark Removal».
+                    <i>Proceedings of the AAAI Conference on Artificial Intelligence</i>, 2025.
+                    <span class="source-pub">
+                        <a href="https://arxiv.org/abs/2504.04687" target="_blank" rel="noopener noreferrer">arxiv.org/abs/2504.04687</a>
+                    </span>
+                </li>
+            </ol>
+        </section>
+
+        <nav class="doc-nav">
+            <a href="index.html"><span aria-hidden="true">&larr;</span> Volver a la herramienta</a>
+            <a href="terminos.html">Términos de uso <span aria-hidden="true">&rarr;</span></a>
+        </nav>
+    </main>
+
+    <footer class="footer">
+        <a href="https://github.com/fabiobritez/copiasegura" target="_blank" rel="noopener noreferrer">Código fuente</a>
+        <span aria-hidden="true">·</span>
+        <a href="verificacion.html">Verificá la privacidad</a>
+        <span aria-hidden="true">·</span>
+        <a href="terminos.html">Términos</a>
+    </footer>
+
+    <script src="js/demos.js"></script>
+    <script src="js/navigation.js"></script>
+</body>
+</html>

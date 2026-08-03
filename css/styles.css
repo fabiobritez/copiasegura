@@ -1,0 +1,840 @@
+/*
+ * Copia Segura
+ * Copyright (C) 2026 Fabio Britez
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+/*
+ * styles.css - Styles specific to the tool (index.html).
+ * The shared foundations live in base.css, loaded before this file.
+ */
+
+/* ---------- header ---------- */
+
+.header {
+  position: relative;
+  text-align: center;
+  margin: 0.5rem 0 1.25rem;
+}
+
+/* ---------- cover ----------
+ *
+ * Full on step 1, collapsed to a compact bar from step 2 on: once the user is
+ * editing, the canvas needs the vertical space more than the branding does.
+ */
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 1.6rem 0 0.4rem;
+}
+
+.brand-mark {
+  width: 3.1rem;
+  height: 3.1rem;
+  flex: none;
+  filter: drop-shadow(0 3px 8px rgba(29, 78, 216, 0.28));
+}
+
+.header h1 {
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  color: var(--text);
+}
+
+.brand-tagline {
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  max-width: 26rem;
+}
+
+.brand-points {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem 1.1rem;
+  list-style: none;
+  margin-top: 0.2rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.brand-points li {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* Checkmark drawn in CSS so the list stays plain text in the markup. The
+   rotation makes the glyph wider than its layout box, hence the margin. */
+.brand-points li::before {
+  content: "";
+  width: 0.4rem;
+  height: 0.7rem;
+  margin-right: 0.28rem;
+  border: solid var(--green-text);
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg) translateY(-0.06rem);
+}
+
+/* Collapsed state, from step 2 on. */
+body.working .brand {
+  flex-direction: row;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.2rem 0 0;
+}
+
+body.working .brand-mark {
+  width: 1.5rem;
+  height: 1.5rem;
+  filter: none;
+}
+
+body.working .header h1 {
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+}
+
+body.working .brand-tagline,
+body.working .brand-points {
+  display: none;
+}
+
+@media (max-width: 420px) {
+  .brand {
+    padding-top: 1rem;
+  }
+
+  .header h1 {
+    font-size: 1.6rem;
+  }
+
+  .brand-tagline {
+    font-size: 0.92rem;
+  }
+}
+
+/* Discreet link under the upload zone. */
+.aside-link {
+  margin-top: 1.1rem;
+  text-align: center;
+  font-size: 0.88rem;
+}
+
+.aside-link a {
+  color: var(--text-muted);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1px;
+}
+
+.aside-link a:hover {
+  color: var(--blue-text);
+  border-bottom-color: var(--blue-light);
+}
+
+#steps {
+  display: flex;
+  justify-content: center;
+  gap: 0.25rem;
+  margin-top: 1rem;
+  list-style: none;
+  flex-wrap: wrap;
+}
+
+#steps li {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  padding: 0.2rem 0.5rem;
+  border-radius: 99px;
+}
+
+#steps .num {
+  display: grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  background: var(--border);
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 0.75rem;
+  flex: none;
+}
+
+#steps li.done .num {
+  background: var(--blue-light);
+  font-size: 0;           /* hides the number and leaves only the tick */
+}
+
+#steps li.done .num::after {
+  content: "✓";
+  color: #fff;
+  font-size: 0.8rem;
+}
+
+#steps li.active {
+  background: rgba(59, 130, 246, 0.14);
+  color: var(--blue-text);
+  font-weight: 600;
+}
+
+#steps li.active .num {
+  background: var(--blue);
+  color: #fff;
+}
+
+/* On small screens only the current step name is shown: the five full names
+   do not fit and wrapped the line. */
+@media (max-width: 560px) {
+  #steps li:not(.active) .step-name {
+    display: none;
+  }
+}
+
+/* ---------- structure ---------- */
+
+main {
+  width: 100%;
+  max-width: 46rem;
+  margin: 0 auto;
+  flex: 1;
+}
+
+.step {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.step h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+
+.help {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 0.9rem;
+}
+
+.success {
+  color: var(--green-text);
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+}
+
+/* ---------- upload ---------- */
+
+.upload-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  border: 2px dashed var(--blue-light);
+  border-radius: var(--radius);
+  padding: 2.2rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  color: var(--blue-text);
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.upload-zone small {
+  color: var(--text-muted);
+}
+
+.upload-zone:hover,
+.upload-zone:focus-visible,
+.upload-zone.dragover {
+  background: rgba(59, 130, 246, 0.07);
+  border-color: var(--blue);
+  outline: none;
+}
+
+/* ---------- templates ---------- */
+
+.template-list {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+
+.template-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.65rem 0.8rem;
+  cursor: pointer;
+}
+
+.template-card:has(input:checked) {
+  border-color: var(--blue);
+  background: rgba(59, 130, 246, 0.07);
+}
+
+.template-card input {
+  margin-top: 0.25rem;
+  accent-color: var(--blue);
+}
+
+.template-card span {
+  display: flex;
+  flex-direction: column;
+}
+
+.template-card small {
+  color: var(--text-muted);
+}
+
+/* ---------- canvas ---------- */
+
+/* Slot that main.js moves the canvas into on each step. No margin of its
+   own: the spacing comes from .canvas-area. */
+.canvas-slot {
+  display: contents;
+}
+
+.canvas-area {
+  background: var(--panel-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+#canvas,
+#finalCanvas {
+  border-radius: 6px;
+  touch-action: none; /* dragging on the image must not scroll the page */
+  max-width: 100%;
+}
+
+/* ---------- what-to-cover guide ---------- */
+
+.guide-intro {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-top: 0.6rem;
+}
+
+.guide-heading {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 1rem;
+  margin-bottom: 0.1rem;
+}
+
+.guide-heading.cover {
+  color: var(--red-text);
+}
+
+.guide-heading.keep {
+  color: var(--green-text);
+}
+
+.guide {
+  border: 1px solid var(--border);
+  background: var(--panel-subtle);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.9rem;
+  margin-bottom: 0.9rem;
+  font-size: 0.9rem;
+}
+
+.guide summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--blue-text);
+}
+
+.guide-list {
+  list-style: none;
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.7rem;
+}
+
+.guide-list li {
+  display: flex;
+  flex-direction: column;
+  border-left: 3px solid var(--border);
+  padding-left: 0.65rem;
+}
+
+.guide-list li.critical {
+  border-left-color: var(--red);
+}
+
+.guide-list li.critical strong::after {
+  content: " · imprescindible";
+  color: var(--red-text);
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+
+#keepList li {
+  border-left-color: var(--green);
+}
+
+.guide-list span {
+  color: var(--text-muted);
+}
+
+/* ---------- marked zones ---------- */
+
+.zone-list {
+  list-style: none;
+  display: grid;
+  gap: 0.4rem;
+  margin-bottom: 0.9rem;
+}
+
+.zone-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.45rem 0.6rem;
+  font-size: 0.92rem;
+}
+
+.zone-item label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.zone-item input {
+  accent-color: var(--red);
+}
+
+.zone-item .remove {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+}
+
+.zone-item .remove:hover {
+  background: #fef2f2;
+  color: var(--red);
+}
+
+.zone-empty {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  padding: 0.4rem 0.2rem;
+}
+
+.fill-options {
+  padding: 0.5rem 0;
+  font-size: 0.92rem;
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.fill-options legend {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  padding: 0 0.35rem;
+}
+
+.fill-options label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+.download-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  align-items: center;
+  margin-bottom: 0.9rem;
+}
+
+/* ---------- form ---------- */
+
+.form {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+}
+
+.form label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: -0.35rem;
+}
+
+.form input[type="text"] {
+  font: inherit;
+  font-weight: 400;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel-subtle);
+  color: var(--text);
+  transition: border-color 0.15s;
+}
+
+.form input[type="text"]::placeholder {
+  color: var(--text-muted);
+  opacity: 0.75;
+}
+
+.form input[type="text"]:focus {
+  outline: 2px solid var(--blue-light);
+  border-color: transparent;
+}
+
+.form input[type="range"] {
+  accent-color: var(--blue);
+}
+
+.code {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.code output,
+.code strong {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color: var(--text);
+  letter-spacing: 0.06em;
+}
+
+/* ---------- buttons ---------- */
+
+.button-row {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+}
+
+.button-row.main {
+  justify-content: space-between;
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+
+button {
+  font: inherit;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  padding: 0.6rem 1.1rem;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.primary {
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-light) 100%);
+  color: #fff;
+}
+
+.primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(29, 78, 216, 0.35);
+}
+
+.secondary {
+  background: var(--panel-subtle);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.secondary:hover:not(:disabled) {
+  border-color: var(--blue-light);
+  color: var(--blue-text);
+}
+
+.tertiary {
+  background: none;
+  color: var(--text-muted);
+}
+
+.tertiary:hover {
+  color: var(--text);
+}
+
+.danger {
+  background: var(--red);
+  color: #fff;
+}
+
+.danger:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
+}
+
+/* ---------- key item, always visible ---------- */
+
+.key-note {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  background: rgba(220, 38, 38, 0.07);
+  border-left: 4px solid var(--red);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 0.7rem 0.9rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.key-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--red-text);
+}
+
+/* ---------- zones header + counter ---------- */
+
+.zones-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.zones-header h3 {
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.counter {
+  display: grid;
+  place-items: center;
+  min-width: 1.6rem;
+  height: 1.6rem;
+  padding: 0 0.4rem;
+  border-radius: 99px;
+  background: var(--red);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.counter.zero {
+  background: var(--border);
+  color: var(--text-muted);
+}
+
+/* ---------- advanced options disclosure ---------- */
+
+.advanced {
+  border: 1px solid var(--border);
+  background: var(--panel-subtle);
+  border-radius: var(--radius);
+  padding: 0.55rem 0.9rem;
+  margin-bottom: 0.9rem;
+  font-size: 0.9rem;
+}
+
+.advanced summary {
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.advanced summary:hover {
+  color: var(--text);
+}
+
+.help-minor {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  margin-top: 0.4rem;
+}
+
+/* ---------- download options ---------- */
+
+.download-options {
+  display: grid;
+  gap: 0.9rem;
+  margin-bottom: 0.9rem;
+}
+
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 1.1rem;
+  border: 1px solid var(--border);
+  background: var(--panel-subtle);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.9rem;
+  font-size: 0.92rem;
+}
+
+.group-title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  width: 100%;
+}
+
+.group label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+.group input {
+  accent-color: var(--blue);
+}
+
+/* ---------- floating notice ---------- */
+
+.notice {
+  position: fixed;
+  left: 50%;
+  bottom: 1.25rem;
+  transform: translateX(-50%);
+  z-index: 30;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: min(34rem, calc(100vw - 2rem));
+  background: #7f1d1d;
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 0.8rem 1rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  box-shadow: var(--shadow-lg);
+  animation: notice-in 0.2s ease-out;
+}
+
+@keyframes notice-in {
+  from { opacity: 0; transform: translate(-50%, 0.6rem); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notice { animation: none; }
+}
+
+.notice-close {
+  background: none;
+  border: none;
+  color: #fff;
+  opacity: 0.75;
+  font-size: 0.9rem;
+  padding: 0.1rem 0.3rem;
+  cursor: pointer;
+  flex: none;
+}
+
+.notice-close:hover {
+  opacity: 1;
+}
+
+.button-row.centered {
+  justify-content: center;
+  margin-top: 0.75rem;
+}
+
+/* ---------- per-step header ----------
+ *
+ * Each step gets its own icon and colour, so it is obvious at a glance which
+ * step you are on and what can be done there.
+ */
+
+.step-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.step-header svg {
+  width: 2.1rem;
+  height: 2.1rem;
+  flex: none;
+  padding: 0.4rem;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.step-header h2 {
+  font-size: 1.15rem;
+  margin-bottom: 0.1rem;
+}
+
+.step-goal {
+  font-size: 0.87rem;
+  color: var(--text-muted);
+}
+
+/* One colour per step, to tell them apart at a glance. */
+.step          { --accent: var(--blue-text);  --accent-soft: rgba(59, 130, 246, 0.14); }
+.step.hide     { --accent: var(--red-text);   --accent-soft: rgba(220, 38, 38, 0.13); }
+.step.mark     { --accent: var(--violet);     --accent-soft: rgba(124, 58, 237, 0.15); }
+.step.download { --accent: var(--green-text); --accent-soft: rgba(21, 128, 61, 0.14); }
+
+.step.hide .step-header { border-bottom-color: rgba(220, 38, 38, 0.25); }
+
+/* Highlighted secondary button: the main action of a step that also offers
+   other actions. */
+.featured {
+  border-color: var(--blue-text) !important;
+  color: var(--blue-text);
+  font-weight: 700;
+}
+
+/* In the framing step the cursor signals that corners can be grabbed. */
+.frame #canvas {
+  cursor: grab;
+}
+
+.frame #canvas:active {
+  cursor: grabbing;
+}
+
+.hide #canvas {
+  cursor: crosshair;
+}
+
+

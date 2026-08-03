@@ -1,0 +1,61 @@
+# Copia Segura: Apache server configuration.
+#
+# The privacy guarantee is enforced by the browser, not by good faith. The
+# key directive is `connect-src 'none'`: it blocks fetch(), XMLHttpRequest,
+# sendBeacon(), WebSocket and EventSource, so injected code cannot open an
+# outbound connection.
+#
+# Anyone can check it with:  curl -I https://your-domain/
+#
+# Scripts and styles live in external files, so neither directive needs
+# 'unsafe-inline'. Adding an inline <script> or style="" attribute will break
+# the page, which is the intended behaviour: the CSP doing its job.
+
+<IfModule mod_headers.c>
+
+    # HTML documents: no outbound connections, no external resources.
+    <FilesMatch "\.html$">
+        Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'none'; form-action 'none'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; worker-src 'self'; manifest-src 'self'"
+    </FilesMatch>
+
+    # The service worker has its own CSP context, taken from the headers it
+    # is served with. It needs connect-src 'self' to fetch the files it
+    # caches; inheriting 'none' would break offline mode.
+    <FilesMatch "^sw\.js$">
+        Header always set Content-Security-Policy "default-src 'self'; connect-src 'self'"
+        Header always set Cache-Control "no-cache"
+    </FilesMatch>
+
+    # General hardening.
+    # HSTS: this tool handles identity documents, so a downgrade to plain HTTP
+    # must not be possible even on the first navigation after the preload.
+    Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "no-referrer"
+    Header always set Cross-Origin-Opener-Policy "same-origin"
+    Header always set Cross-Origin-Resource-Policy "same-origin"
+
+    # Disable browser APIs this application does not use.
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), interest-cohort=()"
+
+</IfModule>
+
+# Correct MIME types
+AddType application/javascript .js
+AddType image/svg+xml .svg
+AddType application/manifest+json .webmanifest
+
+# No directory listings: the file set is public, but an index invites probing.
+Options -Indexes
+
+# Never serve dot files. This covers .htaccess and .gitignore, and above all
+# the .git directory: deploying the repository as-is would otherwise expose
+# the whole source tree and its history through the web server.
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule "(^|/)\." - [F]
+</IfModule>

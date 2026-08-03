@@ -1,0 +1,1057 @@
+/*
+ * Copia Segura
+ * Copyright (C) 2026 Fabio Britez
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+/*
+ * document.css - Styles for the long-form pages.
+ *
+ * Reading format: a narrow column for the text, and room for diagrams to
+ * breathe and break out of the margin when they need to. A diagram is not
+ * decoration here, it is part of the argument, so it carries the same visual
+ * weight as the text.
+ */
+
+/* Smooth scrolling between sections, plus room so the sticky bar does not
+   cover the heading on arrival. */
+html.reading {
+  scroll-behavior: smooth;
+}
+
+html.reading .section {
+  scroll-margin-top: 4rem;
+}
+
+/* ---------- reading layout ---------- */
+
+.doc {
+  width: 100%;
+  max-width: 44rem;      /* ~68 characters: a comfortable reading measure */
+  margin: 0 auto;
+  flex: 1;
+  padding: 0 0.25rem;
+}
+
+.doc-cover {
+  padding: 3rem 0 2.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2.5rem;
+}
+
+.doc-cover .category {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.doc-cover h1 {
+  font-size: clamp(1.9rem, 5.5vw, 2.9rem);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  margin: 0.7rem 0 1rem;
+  color: var(--text);
+}
+
+.doc-cover .lede {
+  font-size: 1.12rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  max-width: 36rem;
+}
+
+/* ---------- table of contents ---------- */
+
+.toc {
+  margin-bottom: 3.5rem;
+  padding: 1.25rem 1.4rem;
+  background: var(--panel-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.toc h2 {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.85rem;
+}
+
+.toc ol {
+  list-style: none;
+  counter-reset: idx;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.toc li {
+  counter-increment: idx;
+  display: flex;
+  gap: 0.7rem;
+  align-items: baseline;
+}
+
+.toc li::before {
+  content: counter(idx, decimal-leading-zero);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  flex: none;
+}
+
+.toc a {
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.toc a:hover {
+  border-bottom-color: var(--blue-text);
+  color: var(--blue-text);
+}
+
+/* ---------- sections ---------- */
+
+.section {
+  margin-bottom: 4rem;
+  scroll-margin-top: 1.5rem;
+}
+
+.section > h2 {
+  font-size: clamp(1.35rem, 3.6vw, 1.75rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.1rem;
+  padding-top: 0.6rem;
+  border-top: 2px solid var(--text);
+}
+
+.section > h2 .number {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.section h3 {
+  font-size: 1.05rem;
+  margin: 2rem 0 0.7rem;
+  letter-spacing: -0.01em;
+}
+
+.doc p {
+  margin-bottom: 1.05rem;
+  line-height: 1.72;
+}
+
+.doc p code,
+.doc li code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.88em;
+  background: var(--panel-subtle);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.05em 0.35em;
+}
+
+.doc ul,
+.doc ol {
+  margin: 0 0 1.05rem 1.2rem;
+}
+
+.doc li {
+  margin-bottom: 0.5rem;
+  line-height: 1.68;
+}
+
+.doc a {
+  color: var(--blue-text);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+}
+
+/* ---------- callouts ---------- */
+
+.pull-quote {
+  margin: 2rem 0;
+  padding: 0 0 0 1.3rem;
+  border-left: 3px solid var(--text);
+  font-size: 1.14rem;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+}
+
+.panel-fact {
+  margin: 2rem 0;
+  padding: 1.2rem 1.4rem;
+  background: var(--panel-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.panel-fact h4 {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.7rem;
+}
+
+.panel-fact p:last-child {
+  margin-bottom: 0;
+}
+
+.panel-alert {
+  border-left: 4px solid var(--red);
+  background: rgba(220, 38, 38, 0.06);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 1.2rem;
+  margin: 1rem 0 0;
+}
+
+.stat strong {
+  display: block;
+  font-size: 1.7rem;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.stat span {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+}
+
+/* ---------- figures and diagrams ---------- */
+
+.figure {
+  margin: 2.4rem 0;
+}
+
+/* Diagrams break out of the reading column: they need room to be legible.
+   --side-margin is how much width is NOT available, so when the side index
+   appears the figures shrink on their own. */
+.figure.wide {
+  width: min(58rem, calc(100vw - var(--side-margin, 2.5rem)));
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+.figure-frame {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  overflow-x: auto;
+}
+
+/* En pantallas chicas cada píxel del marco es ancho que el dibujo pierde, así
+   que el aire se recorta ahí antes que en el diagrama. */
+@media (max-width: 600px) {
+  .figure-frame {
+    padding: 1rem;
+  }
+}
+
+.figure figcaption {
+  margin-top: 0.85rem;
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.figure figcaption b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.figure svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Drawing tokens, so the SVG diagrams follow the active theme. */
+.diagram {
+  --stroke: var(--text-muted);
+  --fill: var(--panel-subtle);
+}
+
+.diagram text {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  fill: var(--text);
+}
+
+.diagram .label {
+  font-size: 12px;
+  fill: var(--text-muted);
+}
+
+.diagram .box-title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.diagram .mono {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+.diagram .box {
+  fill: var(--fill);
+  stroke: var(--border);
+  stroke-width: 1.5;
+}
+
+.diagram .box-danger {
+  fill: rgba(220, 38, 38, 0.1);
+  stroke: var(--red);
+}
+
+.diagram .box-ok {
+  fill: rgba(21, 128, 61, 0.1);
+  stroke: var(--green);
+}
+
+.diagram .arrow {
+  stroke: var(--stroke);
+  stroke-width: 1.5;
+  fill: none;
+}
+
+.diagram .arrowhead {
+  fill: var(--stroke);
+}
+
+/* ---------- diagram system, second generation ----------
+ *
+ * The `.box` / `.label` tokens above are still what verificacion.html draws
+ * with, so they stay untouched. The `d-*` set below is the same idea taken
+ * further and is what como-funciona.html uses: one 400-unit canvas for every
+ * figure, type sized in that canvas at the size it is meant to be read at,
+ * and every colour from a theme token so a drawing follows light and dark
+ * without a second set of values.
+ *
+ * The size cap is the part that is easy to miss. An SVG stretched to the full
+ * width of the frame magnifies its own type, and the same SVG squeezed into a
+ * phone shrinks it to nothing. So the drawing is capped near its natural size
+ * and given a floor: under the floor the frame scrolls sideways (it already
+ * declares overflow-x) instead of making the labels unreadable. The 400-unit
+ * canvas is chosen so that floor still fits a 360 px phone: nothing is cut,
+ * and no drawing depends on a text column that could grow into another one.
+ */
+
+.diagram-fit {
+  display: block;
+  max-width: 29rem;
+  min-width: 19rem;
+  margin: 0 auto;
+}
+
+/* Type. One step for headings, one for the thing being named, one for the
+   aside that qualifies it. Nothing else. */
+.diagram .d-title {
+  font-size: 15px;
+  font-weight: 600;
+  fill: var(--text);
+}
+
+.diagram .d-key {
+  font-size: 13.5px;
+  fill: var(--text);
+}
+
+.diagram .d-field {
+  font-size: 13px;
+  fill: var(--text-muted);
+}
+
+.diagram .d-sub {
+  font-size: 11.5px;
+  fill: var(--text-muted);
+}
+
+.diagram .d-tag {
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  fill: var(--text-muted);
+}
+
+.diagram .d-mono {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 13px;
+  fill: var(--text);
+}
+
+.diagram .d-code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 15px;
+  font-weight: 600;
+  fill: var(--text);
+}
+
+/* Accents. Declared after the type classes on purpose: same specificity, so
+   the later rule wins and `class="d-key d-crit"` reads as expected.
+   The text variants of the tokens are the ones used, because they are the
+   pair that flips between themes to keep contrast against the page. */
+.diagram .d-crit {
+  fill: var(--red-text);
+}
+
+.diagram .d-safe {
+  fill: var(--green-text);
+}
+
+/* Lines: a hairline for structure, a slightly stronger one for flow. */
+.diagram .d-rule {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.diagram .d-line {
+  fill: none;
+  stroke: var(--text-muted);
+  stroke-width: 1.25;
+}
+
+.diagram .d-line-crit {
+  stroke: var(--red-text);
+}
+
+.diagram .d-line-safe {
+  stroke: var(--green-text);
+}
+
+.diagram .d-dash {
+  stroke-dasharray: 5 4;
+}
+
+.diagram .d-mark {
+  fill: var(--text-muted);
+  stroke: none;
+}
+
+.diagram .d-mark-crit {
+  fill: var(--red-text);
+}
+
+.diagram .d-ink {
+  fill: var(--text);
+  stroke: none;
+}
+
+/* Surfaces. Tinted fills stay at ten per cent so they read as a wash in both
+   themes instead of as a block of colour. */
+.diagram .d-box {
+  fill: var(--panel-subtle);
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.diagram .d-box-crit {
+  fill: var(--red-text);
+  fill-opacity: 0.1;
+  stroke: var(--red-text);
+}
+
+.diagram .d-box-safe {
+  fill: var(--green-text);
+  fill-opacity: 0.1;
+  stroke: var(--green-text);
+}
+
+.diagram .d-frame {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 1;
+  stroke-dasharray: 5 4;
+}
+
+/* Bars: a recessive track, and a mark that only fills what it measures. */
+.diagram .d-track {
+  fill: var(--border);
+}
+
+.diagram .d-bar {
+  fill: var(--red-text);
+}
+
+/* ---------- tables ---------- */
+
+.doc table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.6rem 0;
+  font-size: 0.92rem;
+}
+
+.doc th,
+.doc td {
+  text-align: left;
+  padding: 0.6rem 0.7rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.doc th {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom-color: var(--text-muted);
+}
+
+.doc tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ---------- interactive demo ---------- */
+
+.demo {
+  margin: 2.4rem 0;
+}
+
+.demo-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.4rem;
+}
+
+.demo-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 1.2rem;
+  margin-bottom: 1.1rem;
+}
+
+.demo-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.demo-cell h4 {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.demo-cell canvas {
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.demo-status {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  min-height: 1.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.demo-status.success {
+  color: var(--red-text);
+  font-weight: 600;
+}
+
+.demo-controls {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 0.6rem;
+}
+
+.demo-controls button {
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel-subtle);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.demo-controls button:hover:not(:disabled) {
+  border-color: var(--blue-light);
+  color: var(--blue-text);
+}
+
+.demo-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- sources ---------- */
+
+.sources ol {
+  list-style: none;
+  counter-reset: source;
+  margin-left: 0;
+}
+
+.sources li {
+  counter-increment: source;
+  display: flex;
+  gap: 0.8rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.91rem;
+  line-height: 1.6;
+}
+
+.sources li::before {
+  content: counter(source);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  padding-top: 0.2rem;
+  flex: none;
+  min-width: 1.2rem;
+}
+
+.sources .publication {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* In-body reference marker: [1] */
+.ref {
+  font-size: 0.72em;
+  vertical-align: super;
+  line-height: 0;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 0 0.1em;
+}
+
+/* ---------- document navigation ---------- */
+
+.doc-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 2rem 0 1rem;
+  border-top: 1px solid var(--border);
+  margin-top: 3rem;
+}
+
+.doc-nav a {
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.back-to-app {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--blue-text);
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+}
+
+.back-to-app:hover {
+  text-decoration: underline;
+}
+
+@media print {
+  .theme-toggle,
+  .doc-nav,
+  .demo-controls {
+    display: none;
+  }
+
+  .figure.wide {
+    width: 100%;
+    margin-left: 0;
+    transform: none;
+  }
+}
+
+
+/* ---------- utilities ----------
+ * The site CSP forbids inline styles, so one-off rules live here too. That is
+ * a healthy constraint: all styling stays auditable in one place.
+ */
+
+.spaced-top {
+  margin-top: 1rem;
+}
+
+.note-minor {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.figure-caption {
+  display: block;
+  margin-top: 0.85rem;
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.figure-caption b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+
+/* ---------- code blocks ---------- */
+
+.code-block {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: var(--text);
+  overflow-x: auto;
+  white-space: pre;
+  tab-size: 2;
+}
+
+.code-block code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+
+/* ============================================================
+ * LONG-FORM READING NAVIGATION
+ *
+ * Four pieces, one per reader question:
+ *   how much is left?  -> progress bar
+ *   where am I?        -> side index with the active section marked
+ *   how do I jump?     -> drop-down index on small screens
+ *   how do I go back?  -> back-to-top button
+ * ============================================================ */
+
+/* ---------- progress bar ---------- */
+
+.progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 40;
+  background: transparent;
+  pointer-events: none;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0;
+  background: var(--blue-light);
+  transition: width 0.08s linear;
+}
+
+/* ---------- side index (wide screens) ---------- */
+
+.toc-side {
+  display: none;
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  /* Follows the reading column on large screens instead of being stranded
+     against the edge, but never closer than the limit that keeps it clear of
+     the wide figures. */
+  left: max(1.5rem, calc(50vw - 35.25rem));
+  width: 13rem;
+  max-height: 76vh;
+  overflow-y: auto;
+  z-index: 20;
+  padding-right: 0.5rem;
+}
+
+.toc-side ol {
+  list-style: none;
+  margin: 0;
+}
+
+.toc-side li {
+  margin: 0;
+}
+
+.toc-side a {
+  display: block;
+  padding: 0.34rem 0 0.34rem 0.85rem;
+  border-left: 2px solid var(--border);
+  font-size: 0.83rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.toc-side a:hover {
+  color: var(--text);
+  border-left-color: var(--text-muted);
+}
+
+/* The active section is marked with colour and weight, not a background: in
+   a long list a block of colour competes with the article text. */
+.toc-side a.active {
+  color: var(--blue-text);
+  border-left-color: var(--blue-text);
+  font-weight: 600;
+}
+
+/* The index never floats over the text: the body reserves a column for it
+   with padding, so overlap is impossible by construction rather than by a
+   calculation coming out right. */
+@media (min-width: 1240px) {
+  body {
+    --side-margin: 20rem;   /* 1.5 gutter + 13 index + 3.5 separation */
+    padding-left: 17.5rem;
+  }
+
+  .toc-side {
+    display: block;
+  }
+}
+
+/* ---------- section bar (small screens) ---------- */
+
+.section-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  position: sticky;
+  top: 0;
+  z-index: 25;
+  margin: 0 -0.25rem 1.5rem;
+  padding: 0.6rem 0.9rem;
+  background: var(--bg);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s;
+}
+
+.section-bar.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (min-width: 1240px) {
+  .section-bar {
+    display: none;
+  }
+}
+
+.toc-open {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  flex: none;
+}
+
+.toc-open svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.current-section {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- drop-down index ---------- */
+
+.toc-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: none;
+  background: var(--bg);
+  background: color-mix(in srgb, var(--bg) 75%, transparent);
+  backdrop-filter: blur(4px);
+}
+
+.toc-sheet.open {
+  display: block;
+}
+
+.toc-panel {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 3.5rem;
+  width: min(26rem, calc(100vw - 2rem));
+  max-height: 76vh;
+  overflow-y: auto;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 0.8rem;
+}
+
+.toc-panel ol {
+  list-style: none;
+  margin: 0;
+  counter-reset: sheet;
+}
+
+.toc-panel li {
+  counter-increment: sheet;
+  margin: 0;
+}
+
+.toc-panel a {
+  display: flex;
+  gap: 0.7rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.toc-panel a::before {
+  content: counter(sheet, decimal-leading-zero);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  padding-top: 0.15rem;
+}
+
+.toc-panel a:hover,
+.toc-panel a.active {
+  background: var(--panel-subtle);
+  color: var(--blue-text);
+}
+
+/* ---------- back to top ---------- */
+
+.to-top {
+  position: fixed;
+  right: 1.1rem;
+  bottom: 1.1rem;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  width: 2.7rem;
+  height: 2.7rem;
+  border-radius: 50%;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0.5rem);
+  transition: opacity 0.2s, transform 0.2s, color 0.15s, border-color 0.15s;
+}
+
+.to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.to-top:hover {
+  color: var(--blue-text);
+  border-color: var(--blue-light);
+}
+
+.to-top svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+/* ---------- permalinks on headings ---------- */
+
+.section > h2 {
+  position: relative;
+}
+
+.anchor {
+  position: absolute;
+  left: -1.4rem;
+  top: 50%;
+  opacity: 0;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 400;
+  transition: opacity 0.15s;
+}
+
+.section > h2:hover .anchor,
+.anchor:focus-visible {
+  opacity: 1;
+}
+
+@media (max-width: 1100px) {
+  .anchor {
+    display: none;
+  }
+}
+
+/* ---------- reading time ---------- */
+
+.reading-time {
+  display: inline-block;
+  margin-top: 1.1rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* Respect a request for reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .progress-bar,
+  .to-top,
+  .section-bar {
+    transition: none;
+  }
+
+  html {
+    scroll-behavior: auto !important;
+  }
+}

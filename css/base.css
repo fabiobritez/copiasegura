@@ -1,0 +1,248 @@
+/*
+ * Copia Segura
+ * Copyright (C) 2026 Fabio Britez
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+/*
+ * base.css - Shared foundations: theme system, reset, body typography,
+ * light/dark toggle, footer and accessibility.
+ *
+ * Loaded by both the tool (index.html) and the long-form pages, so the theme
+ * and the visual identity stay one system instead of two that drift apart.
+ *
+ * No framework, no remote fonts (Decision 7). Mobile-first: most people edit
+ * the photo of their ID on a phone.
+ */
+
+/* ---------- themes ----------
+ *
+ * Light by default; dark when the system asks for it unless the user chose
+ * light, and always dark when the user chose dark. Written this way so the
+ * site still looks right with JavaScript disabled: then only the media query
+ * applies.
+ *
+ * Colours come in two families because one blue cannot do both jobs: the one
+ * used as a BACKGROUND under white text must be dark, while the one used as
+ * TEXT over the page background has to flip between themes to keep contrast.
+ */
+
+:root {
+  /* solid colours: they carry white text on top */
+  --blue: #1d4ed8;
+  --blue-light: #3b82f6;
+  --red: #dc2626;
+  --green: #15803d;
+  --violet: #7c3aed;
+
+  /* the same colours, but for use as text over the background */
+  --blue-text: #1d4ed8;
+  --red-text: #b91c1c;
+  --green-text: #15803d;
+
+  /* surfaces and typography */
+  --text: #1f2937;
+  --text-muted: #5b6675;
+  --border: #e2e8f0;
+  --bg: #f4f7fb;
+  --panel: #ffffff;
+  --panel-subtle: #f8fafc;
+
+  --radius: 12px;
+  --shadow: 0 4px 16px rgba(15, 23, 42, 0.07);
+  --shadow-lg: 0 10px 30px rgba(15, 23, 42, 0.12);
+}
+
+/* Dark by system preference... */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --blue: #2563eb;
+    --blue-light: #3b82f6;
+    --blue-text: #7cb0ff;
+    --red-text: #fca5a5;
+    --green-text: #6ee7a8;
+    --violet: #a78bfa;
+
+    --text: #e6edf6;
+    --text-muted: #9aa8bd;
+    --border: #2c3a4f;
+    --bg: #0d1626;
+    --panel: #16213a;
+    --panel-subtle: #1b2942;
+
+    --shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* ...or by an explicit choice of the user. */
+:root[data-theme="dark"] {
+  --blue: #2563eb;
+  --blue-light: #3b82f6;
+  --blue-text: #7cb0ff;
+  --red-text: #fca5a5;
+  --green-text: #6ee7a8;
+  --violet: #a78bfa;
+
+  --text: #e6edf6;
+  --text-muted: #9aa8bd;
+  --border: #2c3a4f;
+  --bg: #0d1626;
+  --panel: #16213a;
+  --panel-subtle: #1b2942;
+
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+ * `hidden` means display:none, but only from the browser stylesheet: any
+ * `display` declared here overrides it. Several classes use display:flex, so
+ * their hidden elements kept being painted (the notice as an empty red bar,
+ * the canvas panel as a blank box). This rule makes `hidden` always win.
+ */
+[hidden] {
+  display: none !important;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.55;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+/* Skip link: invisible until keyboard navigation reaches it. */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  background: var(--blue);
+  color: #fff;
+  padding: 0.6rem 1rem;
+  border-radius: 0 0 var(--radius) 0;
+  z-index: 20;
+}
+
+.skip-link:focus {
+  left: 0;
+  top: 0;
+}
+
+/* ---------- footer ---------- */
+
+.footer {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  padding: 1.25rem 0 0.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.footer a {
+  color: var(--text-muted);
+}
+
+.footer a:hover {
+  color: var(--blue-text);
+}
+
+
+/* ---------- accessibility and touch ---------- */
+
+/* Focus always visible for keyboard navigation. */
+:focus-visible {
+  outline: 3px solid var(--blue-light);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Comfortable touch targets: 44 px is the recommended minimum. */
+@media (pointer: coarse) {
+  button {
+    min-height: 44px;
+  }
+
+  .button-row.main button {
+    flex: 1 1 auto;
+  }
+
+  input[type="radio"],
+  input[type="checkbox"] {
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+}
+
+
+/* ---------- theme toggle ----------
+ *
+ * Deliberately discreet: it is a preference, not a product feature. It sits
+ * in the corner in muted text colour and only takes colour on hover, so it
+ * does not compete with the five-step flow.
+ */
+
+.header {
+  position: relative;
+}
+
+.theme-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.theme-toggle:hover {
+  color: var(--blue-text);
+  border-color: var(--blue-light);
+  background: var(--panel);
+}
+
+.theme-toggle svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+/* Shows the icon of what tapping gives you, not the current state: that is
+   what people expect from a switch. */
+.to-light {
+  display: none;
+}
+
+:root[data-theme="dark"] .to-light {
+  display: block;
+}
+
+:root[data-theme="dark"] .to-dark {
+  display: none;
+}
+
+@media (max-width: 420px) {
+  .theme-toggle {
+    width: 2.1rem;
+    height: 2.1rem;
+  }
+}

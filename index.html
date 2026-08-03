@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copia Segura: protegé tu documento antes de compartirlo</title>
+    <meta name="description" content="Ocultá los datos sensibles de tu DNI u otro documento y agregale una marca de agua rastreable. Todo se procesa en tu navegador: nada se sube, y podés comprobarlo.">
+    <link rel="icon" type="image/svg+xml" href="assets/icono.svg">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1d4ed8">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- In the head and without defer: applies the theme before the first
+         paint, so there is no flash of the wrong theme. -->
+    <script src="js/theme.js"></script>
+</head>
+<body>
+    <a class="skip-link" href="#content">Saltar al contenido</a>
+
+    <header class="header">
+        <button type="button" id="btnTheme" class="theme-toggle" aria-label="Cambiar a modo oscuro">
+            <svg class="to-dark" viewBox="0 0 24 24" aria-hidden="true" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 13a8 8 0 1 1-9-9 6.5 6.5 0 0 0 9 9Z"/>
+            </svg>
+            <svg class="to-light" viewBox="0 0 24 24" aria-hidden="true" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="4"/>
+                <path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+            </svg>
+        </button>
+        <div class="brand">
+            <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true">
+                <path d="M32 3 7 13v19c0 16 10.5 25.5 25 29 14.5-3.5 25-13 25-29V13Z" fill="#1d4ed8"/>
+                <path d="M32 3 7 13v19c0 16 10.5 25.5 25 29Z" fill="#3b82f6" opacity=".55"/>
+                <rect x="17" y="27" width="30" height="9" rx="2.5" fill="#0f172a"/>
+                <rect x="17" y="41" width="19" height="5" rx="2.5" fill="#ffffff" opacity=".9"/>
+                <rect x="40" y="41" width="7" height="5" rx="2.5" fill="#ffffff" opacity=".5"/>
+            </svg>
+            <h1>Copia Segura</h1>
+            <p class="brand-tagline">Ocultá los datos sensibles de tu documento antes de compartirlo.</p>
+            <ul class="brand-points">
+                <li>Sin cuenta ni registro</li>
+                <li>No se sube ningún archivo</li>
+                <li>Código abierto</li>
+            </ul>
+        </div>
+        <nav aria-label="Progreso">
+            <ol id="steps">
+                <li data-n="1"><span class="num">1</span><span class="step-name">Cargar</span></li>
+                <li data-n="2"><span class="num">2</span><span class="step-name">Encuadrar</span></li>
+                <li data-n="3"><span class="num">3</span><span class="step-name">Ocultar</span></li>
+                <li data-n="4"><span class="num">4</span><span class="step-name">Marcar</span></li>
+                <li data-n="5"><span class="num">5</span><span class="step-name">Descargar</span></li>
+            </ol>
+        </nav>
+    </header>
+
+    <main id="content">
+        <!-- ================= Step 1 · Load ================= -->
+        <section class="step load" data-step="1" aria-labelledby="t1">
+            <div class="step-header">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor"
+                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 16V4m0 0 4 4m-4-4-4 4"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>
+                </svg>
+                <div>
+                    <h2 id="t1">Cargá la foto</h2>
+                    <p class="step-goal">Elegí la imagen del documento que querés proteger.</p>
+                </div>
+            </div>
+            <div id="uploadZone" class="upload-zone" tabindex="0" role="button"
+                 aria-label="Elegir una imagen, o arrastrarla hasta acá">
+                <svg viewBox="0 0 24 24" width="44" height="44" aria-hidden="true" fill="none"
+                     stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 16V4m0 0 4 4m-4-4-4 4"/>
+                    <path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>
+                </svg>
+                <strong>Elegí una foto o arrastrala hasta acá</strong>
+                <small>JPG o PNG · Se abre en tu navegador y no se envía a ningún lado</small>
+            </div>
+            <input type="file" id="fileInput" accept="image/*" hidden>
+            <p class="aside-link">
+                <a href="como-funciona.html">Cómo funciona y por qué importa</a>
+            </p>
+        </section>
+
+        <!-- ================= Step 2 · Frame ================= -->
+        <section class="step frame" data-step="2" hidden aria-labelledby="t2">
+            <div class="step-header">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor"
+                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 7V4h3M17 4h3v3M20 17v3h-3M7 20H4v-3"/>
+                </svg>
+                <div>
+                    <h2 id="t2">Encuadrá el documento</h2>
+                    <p class="step-goal">Acá recortás y enderezás la foto. No se modifica ningún dato todavía.</p>
+                </div>
+            </div>
+
+            <div id="templateList" class="template-list" role="radiogroup"
+                 aria-label="Tipo de documento"></div>
+
+            <div class="canvas-slot"></div>
+
+            <p class="help">
+                <strong>Arrastrá los cuatro círculos</strong> hasta las esquinas del documento.
+                Sirve aunque la foto haya salido inclinada o en diagonal: al enderezar, el
+                documento queda derecho y recortado.
+            </p>
+            <div class="button-row">
+                <button type="button" id="btnStraighten" class="secondary featured">Enderezar y recortar</button>
+                <button type="button" id="btnRotate" class="secondary">
+                    <span aria-hidden="true">↻</span> Girar 90°
+                </button>
+                <button type="button" id="btnRestore" class="secondary">Volver a la original</button>
+            </div>
+
+            <div class="button-row main">
+                <button type="button" id="btnChangeImage" class="tertiary">Cambiar foto</button>
+                <button type="button" id="btnContinue2" class="primary">Continuar</button>
+            </div>
+        </section>
+
+        <!-- ================= Step 3 · Hide ================= -->
+        <section class="step hide" data-step="3" hidden aria-labelledby="t3">
+            <div class="step-header">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor"
+                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="10" width="18" height="5" rx="1.5" fill="currentColor" stroke="none"/>
+                    <path d="M3 5h10M3 20h14"/>
+                </svg>
+                <div>
+                    <h2 id="t3">Ocultá los datos sensibles</h2>
+                    <p class="step-goal">Acá sí se borra información, y no se puede recuperar.</p>
+                </div>
+            </div>
+
+            <p class="key-note">
+                <span class="key-label">Lo más importante</span>
+                <span id="keyText"></span>
+            </p>
+
+            <div class="canvas-slot"></div>
+
+            <p class="help" id="drawHint">
+                <strong>Arrastrá sobre la foto</strong> para marcar cada zona a ocultar.
+                Lo que tapes se destruye de forma irreversible: no es un efecto visual.
+            </p>
+
+            <div class="zones-header">
+                <h3>Zonas marcadas <span id="zoneCount" class="counter">0</span></h3>
+                <button type="button" id="btnUndo" class="tertiary" disabled>Deshacer lo último</button>
+            </div>
+            <ul id="zoneList" class="zone-list"></ul>
+
+            <details class="guide">
+                <summary>Ver la guía completa: qué tapar y qué dejar visible</summary>
+                <p class="guide-intro">Si tapás de más, la copia no sirve para el trámite y te la
+                   pueden rechazar. El criterio es ocultar lo que permite
+                   <strong>hacerse pasar por vos</strong> y dejar lo que permite
+                   <strong>verificar que sos vos</strong>.</p>
+                <h4 class="guide-heading cover">Conviene tapar</h4>
+                <ul id="coverList" class="guide-list"></ul>
+                <h4 class="guide-heading keep">Conviene dejar visible</h4>
+                <ul id="keepList" class="guide-list"></ul>
+            </details>
+
+            <details class="advanced">
+                <summary>Estilo del relleno</summary>
+                <div class="fill-options" role="radiogroup" aria-label="Estilo del relleno">
+                    <label><input type="radio" name="fillMode" value="solid" checked> Sólido</label>
+                    <label><input type="radio" name="fillMode" value="noise"> Ruido</label>
+                </div>
+                <p class="help-minor">Los dos destruyen la información por igual. Es solo estético.</p>
+            </details>
+
+            <div class="button-row main">
+                <button type="button" id="btnBack3" class="tertiary">Volver</button>
+                <button type="button" id="btnContinue3" class="primary">Ocultar y continuar</button>
+            </div>
+        </section>
+
+        <!-- ================= Step 4 · Mark ================= -->
+        <section class="step mark" data-step="4" hidden aria-labelledby="t4">
+            <div class="step-header">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor"
+                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 20 20 4M9 20l11-11M4 13 13 4"/>
+                </svg>
+                <div>
+                    <h2 id="t4">Agregá una marca de agua</h2>
+                    <p class="step-goal">Escribís un texto que se repite sobre toda la copia. Es opcional.</p>
+                </div>
+            </div>
+            <p class="help">Deja constancia de a quién le mandás la copia y para qué. Sirve para
+               que no la reutilicen, y el <strong>código</strong> te permite saber cuál se filtró
+               si aparece donde no debía.</p>
+
+            <div class="canvas-slot"></div>
+
+            <div class="form">
+                <label for="fieldRecipient">¿Para quién es esta copia?</label>
+                <input type="text" id="fieldRecipient" maxlength="60"
+                       placeholder="Inmobiliaria San Martín" autocomplete="off">
+
+                <label for="fieldPurpose">¿Para qué trámite?</label>
+                <input type="text" id="fieldPurpose" maxlength="60"
+                       placeholder="Garantía de alquiler" autocomplete="off">
+
+                <label for="fieldDate">Fecha</label>
+                <input type="text" id="fieldDate" maxlength="20" autocomplete="off">
+
+                <label for="rangeOpacity">Intensidad de la marca</label>
+                <input type="range" id="rangeOpacity" min="12" max="55" value="28">
+            </div>
+
+            <p class="code">Código de esta copia: <output id="codeOutput">-</output></p>
+
+            <div class="button-row main">
+                <button type="button" id="btnBack4" class="tertiary">Volver</button>
+                <button type="button" id="btnContinue4" class="primary">Continuar</button>
+            </div>
+        </section>
+
+        <!-- ================= Step 5 · Download ================= -->
+        <section class="step download" data-step="5" hidden aria-labelledby="t5">
+            <div class="step-header">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor"
+                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 4v12m0 0 4-4m-4 4-4-4"/><path d="M4 18v2h16v-2"/>
+                </svg>
+                <div>
+                    <h2 id="t5">Revisá y descargá</h2>
+                    <p class="step-goal">Mirá el resultado final antes de guardarlo.</p>
+                </div>
+            </div>
+            <p class="help">Esto es exactamente lo que se va a guardar. El archivo se genera de
+               cero: sin metadatos, sin ubicación y sin el nombre del archivo original.</p>
+
+            <div class="canvas-area">
+                <canvas id="finalCanvas"></canvas>
+            </div>
+
+            <div class="download-options">
+                <div class="group" role="radiogroup" aria-label="Formato">
+                    <span class="group-title">Formato</span>
+                    <label><input type="radio" name="format" value="png" checked> PNG</label>
+                    <label><input type="radio" name="format" value="jpeg"> JPG · más liviano</label>
+                </div>
+                <div class="group">
+                    <span class="group-title">Opciones</span>
+                    <label><input type="checkbox" id="checkGrayscale"> Blanco y negro</label>
+                    <label><input type="checkbox" id="checkWatermark" checked> Marca de agua</label>
+                </div>
+            </div>
+
+            <p class="code" id="codeRow" hidden>
+                Anotá el código de esta copia: <strong id="finalCode"></strong>.
+                Con el destinatario, el propósito y la fecha podés volver a calcularlo cuando quieras.
+            </p>
+
+            <div class="button-row main">
+                <button type="button" id="btnBack5" class="tertiary">Volver</button>
+                <button type="button" id="btnDownload" class="primary">Descargar</button>
+            </div>
+            <p id="downloadMsg" class="success" role="status"></p>
+            <div class="button-row centered">
+                <button type="button" id="btnReset" class="tertiary">Proteger otro documento</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Canvas shared by steps 2, 3 and 4. main.js moves it to the slot of the
+         active step, so the photo always sits above the controls. -->
+    <div id="canvasArea" class="canvas-area" hidden>
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <div id="notice" class="notice" role="alert" hidden></div>
+
+    <footer class="footer">
+        <a href="https://github.com/fabiobritez/copiasegura" target="_blank" rel="noopener noreferrer">Código fuente</a>
+        <span aria-hidden="true">·</span>
+        <a href="como-funciona.html">Cómo funciona</a>
+        <span aria-hidden="true">·</span>
+        <a href="verificacion.html">Verificá la privacidad</a>
+        <span aria-hidden="true">·</span>
+        <a href="terminos.html">Términos</a>
+    </footer>
+
+    <!--
+      Classic scripts, not ES modules, on purpose: browsers block modules over
+      file:// because of CORS. This way anyone who downloads the folder can
+      double-click index.html and use the tool with no server and no install.
+      The order is the dependency order.
+    -->
+    <script src="js/templates.js"></script>
+    <script src="js/geometry.js"></script>
+    <script src="js/editor.js"></script>
+    <script src="js/redact.js"></script>
+    <script src="js/watermark.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
