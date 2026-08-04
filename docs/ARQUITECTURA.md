@@ -211,8 +211,7 @@ copiasegura/
 │   └── VERIFICACION.md
 ├── assets/icono.svg
 ├── sw.js
-├── manifest.json
-└── .htaccess             # CSP y cabeceras
+└── manifest.json
 ```
 
 ## Flujo del usuario

@@ -35,8 +35,11 @@ local ya auditada no cambia sola.
 
 ## Documentación
 
-El sitio incluye tres páginas con diagramas y fuentes citadas, que se leen mejor publicadas que
-desde GitHub: `como-funciona.html`, `verificacion.html` y `terminos.html`.
+El sitio está publicado en **[copiasegura.com.ar](https://copiasegura.com.ar)**, e incluye tres
+páginas con diagramas y fuentes citadas que se leen mejor ahí que desde GitHub:
+[cómo funciona](https://copiasegura.com.ar/como-funciona.html),
+[cómo verificarlo](https://copiasegura.com.ar/verificacion.html) y
+[términos](https://copiasegura.com.ar/terminos.html).
 
 En el repositorio:
 
@@ -58,6 +61,12 @@ Dos conclusiones que conviene conocer antes de usar la herramienta:
 No hay build, ni dependencias, ni gestores de paquetes: es HTML, CSS y JavaScript. Se edita con
 cualquier editor y se prueba abriendo `index.html`. Para el service worker hace falta servirlo por
 HTTP, con cualquier servidor estático.
+
+Quien lo publique en otro lado necesita configurar las cabeceras en su servidor: la garantía la
+impone el navegador, y sin ellas el sitio funciona pero deja de ser comprobable. La que importa es
+`Content-Security-Policy` con `connect-src 'none'` en los HTML, que bloquea `fetch`,
+`XMLHttpRequest`, `sendBeacon`, WebSocket y EventSource. `sw.js` es la excepción: necesita
+`connect-src 'self'` para cachear los archivos, o se rompe el modo sin conexión.
 
 Ver [CONTRIBUTING.md](CONTRIBUTING.md) y [SECURITY.md](SECURITY.md).
 
